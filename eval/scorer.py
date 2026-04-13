@@ -10,7 +10,9 @@ def normalize_text(text: str) -> str:
     text = text.lower().strip()
     # Remove standard punctuation but keep math-relevant chars like - / .
     text = text.translate(str.maketrans("", "", string.punctuation.replace("-", "").replace("/", "").replace(".", "")))
-    return " ".join(text.split())
+    # Strip trailing periods from each token so sentence-ending "42." matches "42"
+    text = " ".join(tok.rstrip(".") for tok in text.split())
+    return text
 
 def check_numerical_equivalence(prediction: str, reference: str) -> bool:
     """

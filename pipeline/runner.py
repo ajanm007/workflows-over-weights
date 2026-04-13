@@ -1,7 +1,11 @@
 import os
+import sys
 import json
 import logging
 from pathlib import Path
+
+# Ensure the project root is on sys.path so modules resolve when run directly
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from config import DATASET_PATH, CHECKPOINT_PATH
 from pipeline.mock_llm import generate_mock_response, extract_search_query, extract_final_answer

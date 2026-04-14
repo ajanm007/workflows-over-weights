@@ -36,4 +36,31 @@ Candidate Rationale & Answer:
 Please critique the candidate response and provide the correct final answer.
 """
 
-TOOL_AND_CRITIQUE_PROMPT = """(A combination of the above in code orchestration)"""
+# Multi-Agent Prompts (Role-based split)
+
+MULTI_AGENT_CRITIC_PROMPT_SYSTEM = """You are a world-class academic peer reviewer and critic. 
+Your task is to analyze the following question and a candidate response.
+Be extremely critical. Look for subtle logical fallacies, dimensional errors, or misinterpretations of the problem.
+Do not just repeat the question. 
+Output a concise, technical critique. End your critique by stating whether the candidate is likely 'CORRECT' or 'INCORRECT'."""
+
+MULTI_AGENT_CRITIC_PROMPT_USER = """Question:
+{question}
+
+Candidate Response:
+{candidate_response}
+
+Please provide your technical critique:"""
+
+MULTI_AGENT_REWRITE_PROMPT = """You are an expert academic assistant. Using your previous logic and the provided peer review critique, please yield a final, corrected answer.
+Incorporate valid feedback from the critique while ignoring any flawed advice.
+
+Peer Review Critique:
+{critique}
+
+Based on this, provided your final answer precisely.
+End your response with the tags <FINAL_ANSWER>your answer</FINAL_ANSWER>.
+
+Question:
+{question}
+"""

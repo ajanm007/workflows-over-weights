@@ -2,8 +2,7 @@ import warnings
 import os
 import logging
 from tavily import TavilyClient
-# from duckduckgo_search import DDGS  ← old
-from ddgs import DDGS  # ← new
+from duckduckgo_search import DDGS
 from config import MAX_SEARCH_RESULTS
 
 # Suppress annoying third-party warnings

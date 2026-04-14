@@ -1,8 +1,14 @@
+import warnings
 import os
 import logging
 from tavily import TavilyClient
 from duckduckgo_search import DDGS
 from config import MAX_SEARCH_RESULTS
+
+# Suppress annoying third-party warnings
+warnings.filterwarnings('ignore', message='.*duckduckgo_search.*renamed.*')
+warnings.filterwarnings('ignore', category=DeprecationWarning, module='jupyter_client.*')
+warnings.filterwarnings('ignore', message='.*datetime.datetime.utcnow.*')
 
 logger = logging.getLogger(__name__)
 

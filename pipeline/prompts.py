@@ -22,45 +22,58 @@ Question:
 {question}
 """
 
-SELF_CRITIQUE_PROMPT_SYSTEM = """You are a meticulous peer reviewer analyzing a candidate answer for an expert-level academic problem.
-Identify any flawed logic, incorrect assumptions, or calculation errors in the candidate's rationale. Do not be overly nice. If the answer is perfect, state so.
-Always end your critique by providing the correct final answer, wrapped in <FINAL_ANSWER>your exact answer</FINAL_ANSWER>.
-"""
+SELF_CRITIQUE_PROMPT_SYSTEM = """You are a careful peer reviewer for expert-level academic problems.
 
-SELF_CRITIQUE_PROMPT_USER = """Question:
-{question}
+Your job is to evaluate a candidate answer and decide ONE of two things:
 
-Candidate Rationale & Answer:
-{candidate_response}
+OPTION A — The answer is correct. Output exactly:
+VERDICT: CORRECT
+<FINAL_ANSWER>{the original answer, unchanged}</FINAL_ANSWER>
 
-Please critique the candidate response and provide the correct final answer.
-"""
+OPTION B — The answer has a clear, specific error. Output exactly:
+VERDICT: INCORRECT
+FLAW: {one sentence describing the specific error}
+<FINAL_ANSWER>{your corrected answer}</FINAL_ANSWER>
+
+CRITICAL RULES:
+- If you are not certain the answer is wrong, choose OPTION A.
+- Do not invent flaws. Doubt favors the original answer.
+- Never output both options. Pick one and stop."""
+
+SELF_CRITIQUE_PROMPT_USER = """Question: {question}
+
+Candidate Answer: {candidate_response}
+
+Evaluate and respond using OPTION A or OPTION B only."""
 
 # Multi-Agent Prompts (Role-based split)
 
-MULTI_AGENT_CRITIC_PROMPT_SYSTEM = """You are a world-class academic peer reviewer and critic. 
-Your task is to analyze the following question and a candidate response.
-Be extremely critical. Look for subtle logical fallacies, dimensional errors, or misinterpretations of the problem.
-Do not just repeat the question. 
-Output a concise, technical critique. End your critique by stating whether the candidate is likely 'CORRECT' or 'INCORRECT'."""
+MULTI_AGENT_CRITIC_PROMPT_SYSTEM = """You are a careful academic peer reviewer.
+Evaluate the candidate response and decide:
 
-MULTI_AGENT_CRITIC_PROMPT_USER = """Question:
-{question}
+If the answer appears correct: output VERDICT: CORRECT and nothing else.
+If there is a clear, specific error: output VERDICT: INCORRECT followed by one sentence describing the exact flaw.
 
-Candidate Response:
-{candidate_response}
+Rules:
+- If uncertain, output VERDICT: CORRECT
+- Do not invent flaws
+- Be concise"""
 
-Please provide your technical critique:"""
+MULTI_AGENT_CRITIC_PROMPT_USER = """Question: {question}
 
-MULTI_AGENT_REWRITE_PROMPT = """You are an expert academic assistant. Using your previous logic and the provided peer review critique, please yield a final, corrected answer.
-Incorporate valid feedback from the critique while ignoring any flawed advice.
+Candidate Response: {candidate_response}
 
-Peer Review Critique:
-{critique}
+Provide your verdict:"""
 
-Based on this, provided your final answer precisely.
-End your response with the tags <FINAL_ANSWER>your answer</FINAL_ANSWER>.
+MULTI_AGENT_REWRITE_PROMPT = """You are an expert academic assistant.
+A peer reviewer has evaluated a candidate answer to the following question.
 
-Question:
-{question}
-"""
+Question: {question}
+
+Original Answer: {original_answer}
+Peer Review: {critique}
+
+If the verdict is CORRECT, reproduce the original answer unchanged.
+If the verdict is INCORRECT, fix only the identified flaw.
+
+End with <FINAL_ANSWER>your answer</FINAL_ANSWER>."""
